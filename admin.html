@@ -7,8 +7,11 @@
 </head>
 <body class="bg-slate-900 text-white p-8">
     <div id="admin-content" class="hidden max-w-4xl mx-auto">
-        <h1 class="text-3xl font-black mb-8 italic">CONSULTA DE <span class="text-blue-500">PIX</span></h1>
-        <div class="bg-slate-800 rounded-3xl p-6 border border-slate-700">
+        <div class="flex justify-between items-center mb-10">
+            <h1 class="text-3xl font-black italic">CONSULTA DE <span class="text-blue-500">PIX</span></h1>
+            <button onclick="location.reload()" class="bg-blue-600 px-4 py-2 rounded-lg font-bold text-xs">ATUALIZAR LISTA</button>
+        </div>
+        <div class="bg-slate-800 rounded-3xl p-6 border border-slate-700 shadow-2xl">
             <table class="w-full text-left">
                 <thead>
                     <tr class="border-b border-slate-700 text-slate-400 text-xs uppercase">
@@ -18,14 +21,15 @@
                         <th class="p-4">Status</th>
                     </tr>
                 </thead>
-                <tbody id="tabela-pedidos"></tbody>
+                <tbody id="tabela-pedidos">
+                    </tbody>
             </table>
         </div>
     </div>
-
     <div id="login-error" class="text-center mt-20">
-        <p class="text-red-400 font-bold">Acesso Negado. Faça login como Administrador.</p>
-        <button onclick="location.href='index.html'" class="mt-4 bg-white text-black px-6 py-2 rounded-full font-bold">Voltar</button>
+        <p class="text-red-400 font-bold text-xl mb-4">Acesso Restrito</p>
+        <p class="text-slate-500 mb-6">Você precisa estar logado como rafaelmartinsdosanjos27@gmail.com</p>
+        <button onclick="location.href='index.html'" class="bg-white text-black px-8 py-3 rounded-full font-black">VOLTAR E LOGAR</button>
     </div>
 
     <script type="module">
@@ -44,27 +48,24 @@
             if (user && user.email === "rafaelmartinsdosanjos27@gmail.com") {
                 document.getElementById('admin-content').classList.remove('hidden');
                 document.getElementById('login-error').classList.add('hidden');
-                carregarPedidos();
+                
+                const q = query(collection(db, "vendas"), orderBy("data", "desc"));
+                onSnapshot(q, (snap) => {
+                    const lista = document.getElementById('tabela-pedidos');
+                    lista.innerHTML = "";
+                    snap.forEach(doc => {
+                        const v = doc.data();
+                        lista.innerHTML += `
+                            <tr class="border-b border-slate-700 hover:bg-slate-700/50 transition-all">
+                                <td class="p-4 font-bold text-blue-400">${v.nome}</td>
+                                <td class="p-4 text-slate-300 text-xs">${v.email}</td>
+                                <td class="p-4 text-xs text-slate-500">${new Date(v.data).toLocaleString('pt-BR')}</td>
+                                <td class="p-4"><span class="bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 px-3 py-1 rounded-full text-[10px] font-black italic">VERIFICAR PIX</span></td>
+                            </tr>`;
+                    });
+                });
             }
         });
-
-        function carregarPedidos() {
-            const q = query(collection(db, "vendas"), orderBy("data", "desc"));
-            onSnapshot(q, (snap) => {
-                const lista = document.getElementById('tabela-pedidos');
-                lista.innerHTML = "";
-                snap.forEach(doc => {
-                    const v = doc.data();
-                    lista.innerHTML += `
-                        <tr class="border-b border-slate-700 text-sm">
-                            <td class="p-4 font-bold">${v.nome}</td>
-                            <td class="p-4 text-slate-400">${v.email}</td>
-                            <td class="p-4">${new Date(v.data).toLocaleString()}</td>
-                            <td class="p-4"><span class="bg-yellow-500/20 text-yellow-500 px-3 py-1 rounded-full text-xs font-black">AGUARDANDO PIX</span></td>
-                        </tr>`;
-                });
-            });
-        }
     </script>
 </body>
 </html>
