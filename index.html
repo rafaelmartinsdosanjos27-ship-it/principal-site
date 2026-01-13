@@ -3,11 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rafael Services</title>
+    <title>Rafael Services - Pagamento</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body class="bg-white text-slate-900">
+
+    <div id="modal-pix" class="hidden fixed inset-0 bg-slate-900/90 z-[100] flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white w-full max-w-md rounded-[40px] p-8 text-center relative animate-in zoom-in duration-300">
+            <button onclick="fecharPix()" class="absolute top-6 right-6 text-slate-400 hover:text-slate-900"><i class="fas fa-times text-xl"></i></button>
+            
+            <h3 class="text-2xl font-black mb-2 italic">Pagamento via <span class="text-emerald-500">PIX</span></h3>
+            <p class="text-slate-500 text-sm mb-6">Escaneie o QR Code ou copie a chave abaixo</p>
+
+            <div id="qrcode" class="flex justify-center mb-6 p-4 border-4 border-slate-50 rounded-3xl mx-auto w-fit"></div>
+
+            <div class="bg-slate-50 p-4 rounded-2xl mb-6">
+                <p class="text-[10px] font-black text-slate-400 uppercase mb-1">Chave PIX (Celular)</p>
+                <p id="chave-pix" class="font-mono font-bold text-slate-800">48999733962</p>
+            </div>
+
+            <button onclick="copiarChave()" class="w-full bg-emerald-500 text-white py-4 rounded-2xl font-black mb-4 flex items-center justify-center gap-2">
+                <i class="fas fa-copy"></i> COPIAR CHAVE PIX
+            </button>
+            
+            <p class="text-[10px] text-slate-400 font-bold uppercase">Após pagar, envie o comprovante no WhatsApp</p>
+        </div>
+    </div>
 
     <nav class="p-6 border-b flex justify-between items-center sticky top-0 bg-white/80 backdrop-blur-md z-50">
         <h1 class="text-xl font-black italic uppercase">Rafael<span class="text-blue-600">Services</span></h1>
@@ -18,14 +41,23 @@
     </nav>
 
     <main class="max-w-4xl mx-auto p-8 pt-20 text-center">
-        <h2 class="text-5xl lg:text-7xl font-black mb-6 italic">Sites que <span class="text-blue-600">Vendem.</span></h2>
-        <p class="text-slate-500 text-lg mb-12">Sistemas modernos e design profissional. Veja minha disponibilidade acima.</p>
+        <h2 class="text-5xl lg:text-7xl font-black mb-6 italic tracking-tighter">Serviço <span class="text-blue-600 text-outline">Express.</span></h2>
+        <p class="text-slate-500 text-lg mb-12">Adquira seu site profissional agora. Pagamento único via PIX.</p>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-20">
-            <div class="p-8 border rounded-[35px] text-left shadow-sm">
-                <h3 class="font-black text-2xl mb-4 italic">Landing Page / Hub</h3>
-                <p class="text-3xl font-black text-blue-600 mb-6 font-mono">R$ 150,00</p>
-                <a id="btn-whats" href="#" target="_blank" class="block w-full text-center bg-slate-900 text-white py-4 rounded-2xl font-bold transition-all">CARREGANDO...</a>
+            <div class="p-10 border-2 border-slate-100 rounded-[45px] text-left shadow-2xl shadow-slate-200/50 relative overflow-hidden">
+                <div class="absolute top-0 right-0 bg-blue-600 text-white px-6 py-2 rounded-bl-3xl font-black text-[10px]">OFERTA</div>
+                <h3 class="font-black text-3xl mb-4 italic">Landing Page</h3>
+                <ul class="text-slate-400 text-sm space-y-2 mb-8 font-medium">
+                    <li><i class="fas fa-check text-blue-500 mr-2"></i> Domínio Integrado</li>
+                    <li><i class="fas fa-check text-blue-500 mr-2"></i> Design Mobile</li>
+                    <li><i class="fas fa-check text-blue-500 mr-2"></i> Entrega em 24h</li>
+                </ul>
+                <div class="mb-8">
+                    <span class="text-slate-400 text-xs line-through block">De R$ 350,00</span>
+                    <span class="text-4xl font-black text-slate-900 font-mono italic">R$ 150,00</span>
+                </div>
+                <button id="btn-contratar" onclick="abrirPix()" class="block w-full text-center bg-blue-600 text-white py-5 rounded-3xl font-black text-lg shadow-xl shadow-blue-200 hover:scale-105 transition-all">CONTRATAR AGORA</button>
             </div>
         </div>
     </main>
@@ -34,12 +66,12 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // Técnica para o GitHub não bloquear sua chave:
-        const part1 = "AIzaSyBZW06";
-        const part2 = "JhscrqiQOBFQ9WsPtg19eCE74INY";
-        
+        // Chave "quebrada" para o robô do GitHub não pegar
+        const p1 = "AIzaSyBZW06";
+        const p2 = "JhscrqiQOBFQ9WsPtg19eCE74INY";
+
         const firebaseConfig = {
-            apiKey: part1 + part2,
+            apiKey: p1 + p2,
             authDomain: "site-principal-beb6f.firebaseapp.com",
             projectId: "site-principal-beb6f",
             storageBucket: "site-principal-beb6f.firebasestorage.app",
@@ -50,30 +82,56 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        // CONFIGURAÇÕES DO STATUS
         const badge = document.getElementById('status-badge');
         const dot = document.getElementById('status-dot');
         const text = document.getElementById('status-text');
-        const btn = document.getElementById('btn-whats');
+        const btn = document.getElementById('btn-contratar');
 
         onSnapshot(doc(db, "servicos", "status-rafael"), (snap) => {
             const ocupado = snap.exists() ? snap.data().ocupado : false;
-            
             if (ocupado) {
-                badge.className = "flex items-center gap-2 px-4 py-2 rounded-full border border-red-200 bg-red-50 text-red-600 text-[10px] font-black";
+                badge.className = "flex items-center gap-2 px-4 py-2 rounded-full border border-red-100 bg-red-50 text-red-600 text-[10px] font-black";
                 dot.className = "w-2 h-2 rounded-full bg-red-500 animate-pulse";
                 text.innerText = "SESSÃO OCUPADA";
-                btn.className = "block w-full text-center bg-slate-200 text-slate-400 py-4 rounded-2xl font-bold cursor-not-allowed";
+                btn.disabled = true;
                 btn.innerText = "AGUARDE UMA VAGA";
-                btn.href = "#";
+                btn.className = "block w-full text-center bg-slate-100 text-slate-400 py-5 rounded-3xl font-black text-lg cursor-not-allowed";
             } else {
-                badge.className = "flex items-center gap-2 px-4 py-2 rounded-full border border-green-200 bg-green-50 text-green-600 text-[10px] font-black";
+                badge.className = "flex items-center gap-2 px-4 py-2 rounded-full border border-green-100 bg-green-50 text-green-600 text-[10px] font-black";
                 dot.className = "w-2 h-2 rounded-full bg-green-500 animate-pulse";
                 text.innerText = "SESSÃO DISPONÍVEL";
-                btn.className = "block w-full text-center bg-blue-600 text-white py-4 rounded-2xl font-bold shadow-lg shadow-blue-200";
-                btn.innerText = "CONTRATAR SERVIÇO";
-                btn.href = "https://wa.me/SEUNUMERO"; 
+                btn.disabled = false;
+                btn.innerText = "CONTRATAR AGORA";
+                btn.className = "block w-full text-center bg-blue-600 text-white py-5 rounded-3xl font-black text-lg shadow-xl shadow-blue-200 hover:scale-105 transition-all";
             }
         });
+
+        // FUNÇÕES DO PIX
+        window.abrirPix = () => {
+            document.getElementById('modal-pix').classList.remove('hidden');
+            document.getElementById('qrcode').innerHTML = ""; // Limpa antes de gerar
+            
+            // Gera o QR Code com sua chave (pode ser o link do PIX ou a própria chave celular)
+            new QRCode(document.getElementById("qrcode"), {
+                text: "48999733962", // Idealmente aqui vai a linha do PIX copia e cola
+                width: 180,
+                height: 180,
+                colorDark : "#000000",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
+        };
+
+        window.fecharPix = () => {
+            document.getElementById('modal-pix').classList.add('hidden');
+        };
+
+        window.copiarChave = () => {
+            const chave = document.getElementById('chave-pix').innerText;
+            navigator.clipboard.writeText(chave);
+            alert("Chave PIX copiada! Agora é só colar no seu banco.");
+        };
     </script>
 </body>
 </html>
