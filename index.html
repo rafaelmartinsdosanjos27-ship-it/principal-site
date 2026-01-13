@@ -3,48 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rafael - Serviços Digitais</title>
+    <title>Rafael Services - Status em Tempo Real</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body class="bg-white text-slate-900 font-sans">
+<body class="bg-white text-slate-900">
 
     <nav class="p-6 border-b flex justify-between items-center sticky top-0 bg-white/80 backdrop-blur-md z-50">
-        <h1 class="text-xl font-black tracking-tighter">RAFAEL<span class="text-blue-600">SERVICES</span></h1>
-        
-        <div id="status-badge" class="flex items-center gap-2 px-4 py-2 rounded-full border text-xs font-bold transition-all">
-            <span id="status-dot" class="w-2 h-2 rounded-full animate-pulse"></span>
-            <span id="status-text">Carregando...</span>
+        <h1 class="text-xl font-black italic uppercase">Rafael<span class="text-blue-600">Services</span></h1>
+        <div id="status-badge" class="flex items-center gap-2 px-4 py-2 rounded-full border text-[10px] font-black transition-all">
+            <span id="status-dot" class="w-2 h-2 rounded-full"></span>
+            <span id="status-text">CARREGANDO...</span>
         </div>
     </nav>
 
     <main class="max-w-4xl mx-auto p-8 pt-20 text-center">
-        <span class="bg-blue-50 text-blue-600 px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest">Disponível para Projetos</span>
-        <h2 class="text-5xl lg:text-7xl font-black mt-6 mb-8 leading-tight">Eu crio o seu site profissional por um <span class="text-blue-600">preço justo.</span></h2>
-        <p class="text-slate-500 text-lg mb-10 max-w-xl mx-auto">Desenvolvimento rápido, seguro e moderno para o seu negócio decolar na internet.</p>
+        <h2 class="text-5xl lg:text-7xl font-black mb-6">Sites Profissionais por um <span class="text-blue-600">Preço Justo.</span></h2>
+        <p class="text-slate-500 text-lg mb-12">Desenvolvimento rápido e moderno. Confira meu status de disponibilidade no topo.</p>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-20 text-left">
-            <div class="p-8 border rounded-[35px] hover:shadow-xl transition-all">
-                <h3 class="font-black text-2xl mb-2">Site Institucional</h3>
-                <p class="text-slate-400 text-sm mb-6">Ideal para empresas e portfólios.</p>
-                <p class="text-3xl font-black text-blue-600 mb-6">R$ 150 <span class="text-sm text-slate-400 font-normal">/projeto</span></p>
-                <ul class="space-y-3 mb-8 text-sm">
-                    <li><i class="fas fa-check text-green-500 mr-2"></i> Design Moderno</li>
-                    <li><i class="fas fa-check text-green-500 mr-2"></i> Otimizado para Celular</li>
-                </ul>
-                <a id="btn-contato" href="#" class="block w-full text-center bg-slate-900 text-white py-4 rounded-2xl font-bold">CONTRATAR AGORA</a>
-            </div>
-
-            <div class="p-8 border rounded-[35px] bg-slate-50 relative overflow-hidden">
-                <div class="absolute top-4 right-4 bg-orange-500 text-white text-[10px] px-3 py-1 rounded-full font-black uppercase">Mais pedido</div>
-                <h3 class="font-black text-2xl mb-2">Landing Page</h3>
-                <p class="text-slate-400 text-sm mb-6">Focada em vendas e conversão.</p>
-                <p class="text-3xl font-black text-blue-600 mb-6">R$ 250 <span class="text-sm text-slate-400 font-normal">/projeto</span></p>
-                <ul class="space-y-3 mb-8 text-sm">
-                    <li><i class="fas fa-check text-green-500 mr-2"></i> Integração com WhatsApp</li>
-                    <li><i class="fas fa-check text-green-500 mr-2"></i> Painel Administrativo</li>
-                </ul>
-                <a id="btn-contato-2" href="#" class="block w-full text-center bg-blue-600 text-white py-4 rounded-2xl font-bold">CONTRATAR AGORA</a>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-20">
+            <div class="p-8 border rounded-[35px] text-left">
+                <h3 class="font-black text-2xl mb-4">Site/Landing Page</h3>
+                <p class="text-3xl font-black text-blue-600 mb-6">R$ 150,00</p>
+                <a id="btn-whats" href="https://wa.me/SEUNUMERO" target="_blank" class="block w-full text-center bg-slate-900 text-white py-4 rounded-2xl font-bold">CONTRATAR AGORA</a>
             </div>
         </div>
     </main>
@@ -52,40 +33,42 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-        import { firebaseConfig } from "./firebase-config.js";
+
+        // Chaves direto no código para não dar erro de importação
+        const firebaseConfig = {
+            apiKey: "AIzaSyBZW06JhscrqiQOBFQ9WsPtg19eCE74INY",
+            authDomain: "site-principal-beb6f.firebaseapp.com",
+            projectId: "site-principal-beb6f",
+            storageBucket: "site-principal-beb6f.firebasestorage.app",
+            messagingSenderId: "1027079340460",
+            appId: "1:1027079340460:web:730dd01b064017cdebba09"
+        };
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Monitorar Status do Funcionário (Você)
+        // Monitorar Status do Rafael
         const badge = document.getElementById('status-badge');
         const dot = document.getElementById('status-dot');
         const text = document.getElementById('status-text');
-        const btns = [document.getElementById('btn-contato'), document.getElementById('btn-contato-2')];
+        const btn = document.getElementById('btn-whats');
 
+        // Escuta o banco de dados em tempo real
         onSnapshot(doc(db, "servicos", "status-rafael"), (snap) => {
-            if (snap.exists()) {
-                const ocupado = snap.data().ocupado;
-                
-                if (ocupado) {
-                    badge.className = "flex items-center gap-2 px-4 py-2 rounded-full border border-red-100 bg-red-50 text-red-600 text-xs font-bold";
-                    dot.className = "w-2 h-2 rounded-full bg-red-500 animate-pulse";
-                    text.innerText = "FUNCIONÁRIO OCUPADO";
-                    btns.forEach(b => {
-                        b.innerText = "AGUARDAR VAGA";
-                        b.className = "block w-full text-center bg-slate-300 text-slate-500 py-4 rounded-2xl font-bold cursor-not-allowed";
-                        b.href = "javascript:void(0)";
-                    });
-                } else {
-                    badge.className = "flex items-center gap-2 px-4 py-2 rounded-full border border-green-100 bg-green-50 text-green-600 text-xs font-bold";
-                    dot.className = "w-2 h-2 rounded-full bg-green-500 animate-pulse";
-                    text.innerText = "FUNCIONÁRIO DISPONÍVEL";
-                    btns.forEach(b => {
-                        b.innerText = "CONTRATAR AGORA";
-                        b.className = b.id === 'btn-contato' ? "block w-full text-center bg-slate-900 text-white py-4 rounded-2xl font-bold" : "block w-full text-center bg-blue-600 text-white py-4 rounded-2xl font-bold";
-                        b.href = "https://wa.me/SEUNUMERO"; // Coloque seu WhatsApp aqui
-                    });
-                }
+            const ocupado = snap.exists() ? snap.data().ocupado : false;
+            
+            if (ocupado) {
+                badge.className = "flex items-center gap-2 px-4 py-2 rounded-full border border-red-200 bg-red-50 text-red-600 text-[10px] font-black";
+                dot.className = "w-2 h-2 rounded-full bg-red-500 animate-pulse";
+                text.innerText = "FUNCIONÁRIO OCUPADO";
+                btn.className = "block w-full text-center bg-slate-200 text-slate-400 py-4 rounded-2xl font-bold cursor-not-allowed";
+                btn.innerText = "AGUARDE UMA VAGA";
+            } else {
+                badge.className = "flex items-center gap-2 px-4 py-2 rounded-full border border-green-200 bg-green-50 text-green-600 text-[10px] font-black";
+                dot.className = "w-2 h-2 rounded-full bg-green-500 animate-pulse";
+                text.innerText = "FUNCIONÁRIO DISPONÍVEL";
+                btn.className = "block w-full text-center bg-blue-600 text-white py-4 rounded-2xl font-bold";
+                btn.innerText = "CONTRATAR AGORA";
             }
         });
     </script>
