@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PROMOÇÃO RELÂMPAGO - R$ 15</title>
+    <title>MEGA PROMOÇÃO - R$ 15</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -14,12 +14,19 @@
         <div class="bg-white w-full max-w-sm rounded-[40px] p-8 text-center animate-in fade-in zoom-in duration-300">
             <h3 class="text-2xl font-black italic mb-2 text-emerald-600 uppercase">Pagamento PIX</h3>
             <p class="text-zinc-400 text-[10px] font-bold mb-6 uppercase tracking-widest">Valor da Promoção: R$ 15,00</p>
+            
             <div id="qrcode" class="flex justify-center mb-6 p-4 bg-zinc-50 rounded-3xl mx-auto w-fit"></div>
-            <div class="bg-zinc-100 p-4 rounded-2xl mb-6 font-mono font-bold text-zinc-800">48999733962</div>
-            <a href="https://wa.me/5548996354447?text=Rafael, paguei os 15 reais! Segue o comprovante." target="_blank" class="w-full bg-emerald-500 text-white py-4 rounded-2xl font-black flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-all">
+            
+            <div class="bg-zinc-100 p-4 rounded-2xl mb-6 font-mono font-bold text-zinc-800 border border-zinc-200">
+                <p class="text-[9px] text-zinc-400 uppercase mb-1">Chave Celular</p>
+                48999733962
+            </div>
+
+            <a id="link-comprovante" href="#" target="_blank" class="w-full bg-emerald-500 text-white py-4 rounded-2xl font-black flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-all mb-4">
                 <i class="fab fa-whatsapp text-xl"></i> ENVIAR COMPROVANTE
             </a>
-            <button onclick="fecharPix()" class="mt-4 text-zinc-400 text-xs font-bold uppercase hover:underline">Fechar</button>
+            
+            <button onclick="fecharPix()" class="text-zinc-400 text-xs font-bold uppercase hover:underline">Fechar Janela</button>
         </div>
     </div>
 
@@ -37,33 +44,34 @@
         </div>
 
         <h2 class="text-7xl font-black mb-2 italic tracking-tighter leading-none">MEGA <span class="text-blue-600">OFFER.</span></h2>
-        <p class="text-zinc-400 font-bold mb-10 italic">Seu site profissional por preço de café.</p>
+        <p class="text-zinc-400 font-bold mb-10 italic underline decoration-blue-500 underline-offset-4">Oportunidade única para o seu negócio.</p>
 
         <div class="bg-white border-2 border-zinc-100 rounded-[50px] p-10 shadow-2xl shadow-blue-100/50 relative overflow-hidden">
             <div class="absolute top-0 right-0 bg-red-600 text-white px-8 py-2 rounded-bl-3xl font-black text-xs italic tracking-widest animate-pulse">90% OFF</div>
             
-            <h3 class="text-3xl font-black italic mb-2 uppercase text-left">Landing Page</h3>
+            <h3 class="text-3xl font-black italic mb-2 uppercase text-left tracking-tighter">Landing Page</h3>
             <div class="w-full bg-zinc-100 h-1.5 rounded-full mb-6 overflow-hidden">
                 <div class="bg-blue-600 h-full w-[85%]"></div>
             </div>
-            <p class="text-left text-[10px] font-black text-zinc-400 mb-8 uppercase tracking-widest">Apenas 2 vagas restantes no preço promocional</p>
+            <p class="text-left text-[10px] font-black text-zinc-400 mb-8 uppercase tracking-widest">Apenas 2 vagas restantes hoje</p>
 
             <div class="flex items-end gap-2 mb-10">
-                <span class="text-5xl font-black font-mono italic">R$ 15</span>
-                <span class="text-zinc-300 text-lg line-through font-bold mb-1">R$ 150</span>
+                <span class="text-6xl font-black font-mono italic">R$ 15</span>
+                <span class="text-zinc-300 text-xl line-through font-bold mb-1">R$ 150</span>
             </div>
 
             <div id="btn-container">
-                <button disabled class="w-full bg-zinc-100 text-zinc-400 py-5 rounded-3xl font-black text-lg uppercase italic border-2 border-dashed border-zinc-200">Faça login para liberar</button>
+                <button onclick="loginGoogle()" class="w-full bg-zinc-900 text-white py-5 rounded-3xl font-black text-lg shadow-xl active:scale-95 transition-all uppercase italic">Login para Comprar</button>
             </div>
         </div>
     </main>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, onSnapshot, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
+        // Configuração segura (Chave fatiada)
         const p1 = "AIzaSyBZW06"; const p2 = "JhscrqiQOBFQ9WsPtg19eCE74INY";
         const firebaseConfig = {
             apiKey: p1 + p2,
@@ -82,20 +90,26 @@
         let userGlobal = null;
         let statusOcupado = false;
 
-        window.loginGoogle = () => signInWithPopup(auth, provider).catch(err => alert("Ative o Google no Firebase Authentication!"));
+        // Login/Logout
+        window.loginGoogle = () => signInWithPopup(auth, provider);
         window.logout = () => signOut(auth);
 
         onAuthStateChanged(auth, (user) => {
             userGlobal = user;
             const authArea = document.getElementById('auth-area');
             if (user) {
-                authArea.innerHTML = `<button onclick="logout()" class="flex items-center gap-2 group"><img src="${user.photoURL}" class="w-8 h-8 rounded-full border-2 border-blue-500"><span class="text-[10px] font-black text-zinc-400 group-hover:text-red-500 uppercase">Sair</span></button>`;
+                authArea.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <img src="${user.photoURL}" class="w-8 h-8 rounded-full border-2 border-blue-500">
+                        <button onclick="logout()" class="text-[10px] font-black text-zinc-400 hover:text-red-500 uppercase transition-all">Sair</button>
+                    </div>`;
             } else {
                 authArea.innerHTML = `<button onclick="loginGoogle()" class="bg-zinc-900 text-white px-6 py-2 rounded-full text-[10px] font-black hover:bg-blue-600 transition-all">LOGIN GOOGLE</button>`;
             }
             renderBotao();
         });
 
+        // Monitor de Status do Firestore
         onSnapshot(doc(db, "servicos", "status-rafael"), (snap) => {
             statusOcupado = snap.exists() ? snap.data().ocupado : false;
             const dot = document.getElementById('status-dot');
@@ -116,11 +130,36 @@
             }
         }
 
-        window.abrirPix = () => {
-            document.getElementById('modal-pix').classList.remove('hidden');
-            document.getElementById('qrcode').innerHTML = "";
-            new QRCode(document.getElementById("qrcode"), { text: "48999733962", width: 160, height: 160 });
+        window.abrirPix = async () => {
+            if (userGlobal) {
+                try {
+                    // 1. REGISTRA A INTENÇÃO DE COMPRA NO PAINEL ADMIN
+                    await addDoc(collection(db, "vendas"), {
+                        nome: userGlobal.displayName,
+                        email: userGlobal.email,
+                        data: new Date().toISOString(),
+                        valor: 15.00
+                    });
+
+                    // 2. CONFIGURA WHATSAPP DE ATENDIMENTO
+                    const msg = encodeURIComponent(`Olá Rafael! Sou ${userGlobal.displayName} (${userGlobal.email}) e acabei de fazer o PIX de R$ 15 da promoção.`);
+                    document.getElementById('link-comprovante').href = `https://wa.me/5548996354447?text=${msg}`;
+
+                    // 3. MOSTRA O PIX
+                    document.getElementById('modal-pix').classList.remove('hidden');
+                    document.getElementById('qrcode').innerHTML = "";
+                    new QRCode(document.getElementById("qrcode"), { 
+                        text: "48999733962", 
+                        width: 160, 
+                        height: 160 
+                    });
+                } catch (e) {
+                    alert("Erro ao processar pedido. Verifique as regras do Firestore.");
+                    console.error(e);
+                }
+            }
         };
+
         window.fecharPix = () => document.getElementById('modal-pix').classList.add('hidden');
     </script>
 </body>
