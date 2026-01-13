@@ -3,72 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rafael Services - Pagamento</title>
+    <title>Rafael Services - Mega Promoção</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body class="bg-slate-50 text-slate-900">
 
-    <div id="modal-pix" class="hidden fixed inset-0 bg-slate-900/90 z-[101] flex items-center justify-center p-4 backdrop-blur-sm">
+    <div id="modal-pix" class="hidden fixed inset-0 bg-slate-900/95 z-[101] flex items-center justify-center p-4 backdrop-blur-md">
         <div class="bg-white w-full max-w-md rounded-[40px] p-8 text-center relative animate-in zoom-in duration-300">
             <button onclick="fecharPix()" class="absolute top-6 right-6 text-slate-300 hover:text-slate-900"><i class="fas fa-times"></i></button>
-            
-            <h3 class="text-2xl font-black mb-2 italic">Pagamento <span class="text-emerald-500">PIX</span></h3>
-            <p class="text-slate-500 text-[11px] mb-6 font-bold uppercase tracking-widest">Pague e envie o comprovante abaixo</p>
-
+            <h3 class="text-2xl font-black mb-2 italic">Mega Promoção <span class="text-emerald-500">R$ 15</span></h3>
+            <p class="text-slate-500 text-[10px] mb-6 font-bold uppercase">Pague o PIX e envie o comprovante</p>
             <div id="qrcode" class="flex justify-center mb-6 p-4 border-4 border-slate-50 rounded-3xl mx-auto w-fit bg-white"></div>
-
-            <div class="bg-slate-50 p-5 rounded-3xl mb-6 border border-slate-100">
-                <p class="text-[9px] font-black text-slate-400 uppercase mb-1">Chave PIX para transferência</p>
-                <p id="chave-pix-texto" class="font-mono font-bold text-slate-800 text-lg tracking-tight">48999733962</p>
-            </div>
-
-            <div class="grid grid-cols-1 gap-3">
-                <button onclick="copiarChave()" class="w-full bg-slate-100 text-slate-700 py-4 rounded-2xl font-black flex items-center justify-center gap-2 hover:bg-slate-200 transition-all">
-                    <i class="fas fa-copy"></i> COPIAR CHAVE
-                </button>
-
-                <a href="https://wa.me/5548996354447?text=Olá Rafael, acabei de realizar o pagamento do PIX. Segue o comprovante!" 
-                   target="_blank" 
-                   class="w-full bg-emerald-500 text-white py-5 rounded-2xl font-black flex items-center justify-center gap-3 shadow-xl shadow-emerald-200 hover:scale-105 transition-all">
-                    <i class="fab fa-whatsapp text-xl"></i> ENVIAR COMPROVANTE
-                </a>
-            </div>
-            
-            <p class="mt-6 text-[9px] text-slate-400 font-bold uppercase italic">Atendimento: 48 99635-4447</p>
+            <div class="bg-slate-50 p-4 rounded-3xl mb-4 border border-slate-100 font-mono font-bold text-slate-800 text-lg">48999733962</div>
+            <a href="https://wa.me/5548996354447?text=Olá Rafael, paguei os 15 reais da promoção. Segue o comprovante!" 
+               target="_blank" class="w-full bg-emerald-500 text-white py-4 rounded-2xl font-black flex items-center justify-center gap-3 shadow-lg">
+                <i class="fab fa-whatsapp"></i> ENVIAR COMPROVANTE
+            </a>
         </div>
     </div>
 
     <nav class="p-6 flex justify-between items-center sticky top-0 bg-white/80 backdrop-blur-md z-50 border-b">
         <h1 class="text-xl font-black italic uppercase tracking-tighter">Rafael<span class="text-blue-600">Services</span></h1>
-        <div id="status-badge" class="flex items-center gap-2 px-4 py-2 rounded-full border text-[10px] font-black transition-all">
-            <span id="status-dot" class="w-2 h-2 rounded-full"></span>
-            <span id="status-text">...</span>
+        <div id="auth-area" class="flex items-center gap-3">
+            <button onclick="loginGoogle()" id="btn-login" class="bg-slate-900 text-white px-5 py-2 rounded-full text-xs font-black transition-all hover:bg-blue-600">ENTRAR COM GOOGLE</button>
         </div>
     </nav>
 
     <main class="max-w-4xl mx-auto p-8 pt-16 text-center">
-        <h2 class="text-6xl font-black mb-6 italic tracking-tighter">Site <span class="text-blue-600">Profissional.</span></h2>
-        <p class="text-slate-500 text-lg mb-12 font-medium">Contrate agora e receba seu sistema em tempo recorde.</p>
+        <div id="status-badge" class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border text-[9px] font-black mb-6 bg-white shadow-sm">
+            <span id="status-dot" class="w-2 h-2 rounded-full bg-slate-300"></span>
+            <span id="status-text italic">VERIFICANDO DISPONIBILIDADE...</span>
+        </div>
 
-        <div class="max-w-sm mx-auto p-10 bg-white border-2 border-slate-100 rounded-[50px] text-left shadow-2xl relative group">
-            <div class="absolute -top-4 -right-4 bg-blue-600 text-white px-6 py-2 rounded-2xl font-black text-xs shadow-lg">PROMOÇÃO</div>
+        <h2 class="text-6xl font-black mb-4 italic tracking-tighter uppercase leading-none">Mega <span class="text-blue-600">Promoção.</span></h2>
+        <p class="text-slate-400 text-lg mb-10 font-bold italic underline decoration-blue-500">Apenas os 5 primeiros pedidos de hoje!</p>
+
+        <div class="max-w-sm mx-auto p-10 bg-white border-2 border-slate-200 rounded-[50px] text-left shadow-2xl relative">
+            <div class="absolute -top-4 -right-4 bg-red-600 text-white px-6 py-2 rounded-2xl font-black text-xs shadow-lg animate-bounce italic">R$ 15,00</div>
             <h3 class="font-black text-3xl mb-4 italic uppercase">Landing Page</h3>
             <div class="mb-8">
-                <span class="text-slate-400 text-xs line-through">De R$ 250,00</span>
-                <p class="text-4xl font-black text-slate-900 font-mono italic">R$ 150,00</p>
+                <span class="text-slate-400 text-xs line-through">De R$ 150,00</span>
+                <p class="text-5xl font-black text-slate-900 font-mono italic">R$ 15,00</p>
             </div>
-            <button id="btn-contratar" onclick="abrirPix()" class="w-full bg-blue-600 text-white py-5 rounded-3xl font-black text-lg shadow-xl shadow-blue-200 hover:scale-105 transition-all uppercase italic">Contratar Agora</button>
+            
+            <div id="btn-container">
+                <p class="text-slate-400 text-[10px] font-black text-center uppercase border-2 border-dashed p-4 rounded-3xl">Faça login para contratar</p>
+            </div>
         </div>
     </main>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-        const p1 = "AIzaSyBZW06";
-        const p2 = "JhscrqiQOBFQ9WsPtg19eCE74INY";
+        const p1 = "AIzaSyBZW06"; const p2 = "JhscrqiQOBFQ9WsPtg19eCE74INY";
         const firebaseConfig = {
             apiKey: p1 + p2,
             authDomain: "site-principal-beb6f.firebaseapp.com",
@@ -80,42 +71,67 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
 
-        // MONITOR DE STATUS
-        onSnapshot(doc(db, "servicos", "status-rafael"), (snap) => {
-            const ocupado = snap.exists() ? snap.data().ocupado : false;
-            const b = document.getElementById('btn-contratar');
-            const dot = document.getElementById('status-dot');
-            const txt = document.getElementById('status-text');
+        let usuarioLogado = null;
+        let estaOcupado = false;
 
-            if(ocupado) {
-                b.disabled = true; b.innerText = "OCUPADO"; b.className = "w-full bg-slate-200 text-slate-400 py-5 rounded-3xl font-black text-lg cursor-not-allowed uppercase italic";
-                dot.className = "w-2 h-2 rounded-full bg-red-500 animate-pulse"; txt.innerText = "SESSÃO OCUPADA";
+        // SISTEMA DE LOGIN
+        window.loginGoogle = () => signInWithPopup(auth, provider);
+        window.logout = () => signOut(auth);
+
+        onAuthStateChanged(auth, (user) => {
+            const authArea = document.getElementById('auth-area');
+            const btnContainer = document.getElementById('btn-container');
+            usuarioLogado = user;
+
+            if (user) {
+                authArea.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <img src="${user.photoURL}" class="w-8 h-8 rounded-full border-2 border-blue-500">
+                        <button onclick="logout()" class="text-[10px] font-black text-slate-400 hover:text-red-500 transition-all uppercase">Sair</button>
+                    </div>`;
+                atualizarBotaoContratar();
             } else {
-                b.disabled = false; b.innerText = "Contratar Agora"; b.className = "w-full bg-blue-600 text-white py-5 rounded-3xl font-black text-lg shadow-xl shadow-blue-200 hover:scale-105 transition-all uppercase italic";
-                dot.className = "w-2 h-2 rounded-full bg-green-500 animate-pulse"; txt.innerText = "SESSÃO DISPONÍVEL";
+                authArea.innerHTML = `<button onclick="loginGoogle()" class="bg-slate-900 text-white px-5 py-2 rounded-full text-xs font-black hover:bg-blue-600 transition-all">ENTRAR COM GOOGLE</button>`;
+                btnContainer.innerHTML = `<p class="text-slate-400 text-[10px] font-black text-center uppercase border-2 border-dashed p-4 rounded-3xl">Faça login para contratar</p>`;
             }
         });
 
-        // FUNÇÕES DO MODAL
+        // MONITOR DE STATUS (OCUPADO/LIVRE)
+        onSnapshot(doc(db, "servicos", "status-rafael"), (snap) => {
+            estaOcupado = snap.exists() ? snap.data().ocupado : false;
+            const dot = document.getElementById('status-dot');
+            const txt = document.getElementById('status-text');
+
+            if(estaOcupado) {
+                dot.className = "w-2 h-2 rounded-full bg-red-500 animate-pulse";
+                txt.innerText = "SESSÃO OCUPADA - AGUARDE VAGA";
+            } else {
+                dot.className = "w-2 h-2 rounded-full bg-green-500 animate-pulse";
+                txt.innerText = "SESSÃO DISPONÍVEL - PODE CONTRATAR";
+            }
+            atualizarBotaoContratar();
+        });
+
+        function atualizarBotaoContratar() {
+            const container = document.getElementById('btn-container');
+            if (!usuarioLogado) return;
+
+            if (estaOcupado) {
+                container.innerHTML = `<button disabled class="w-full bg-slate-200 text-slate-400 py-5 rounded-3xl font-black text-lg cursor-not-allowed uppercase italic">Sessão Ocupada</button>`;
+            } else {
+                container.innerHTML = `<button onclick="abrirPix()" class="w-full bg-blue-600 text-white py-5 rounded-3xl font-black text-lg shadow-xl shadow-blue-200 hover:scale-105 transition-all uppercase italic">Contratar por R$ 15</button>`;
+            }
+        }
+
         window.abrirPix = () => {
             document.getElementById('modal-pix').classList.remove('hidden');
             document.getElementById('qrcode').innerHTML = "";
-            new QRCode(document.getElementById("qrcode"), { 
-                text: "48999733962", 
-                width: 180, 
-                height: 180,
-                colorDark : "#000000",
-                colorLight : "#ffffff"
-            });
+            new QRCode(document.getElementById("qrcode"), { text: "48999733962", width: 180, height: 180 });
         };
-
         window.fecharPix = () => document.getElementById('modal-pix').classList.add('hidden');
-
-        window.copiarChave = () => {
-            navigator.clipboard.writeText("48999733962");
-            alert("Chave PIX copiada com sucesso!");
-        };
     </script>
 </body>
 </html>
